@@ -1,0 +1,176 @@
+Django learning:
+
+command for create a  django project:
+django-admin startproject projectname
+
+__init__.py --> blank python script,django will consider the folder as python package
+
+settings.py -->project settings,configurations,database configuration,installed applications,middlewware configurations
+
+urls.py  -->all url patterns will be stored in urls.py
+
+wsgi.py  -->Web Server Gateway Interface
+this file is used when we deploy our application in production server
+
+asgi.py  -->Asynchronus
+
+a particular area will be reload in a page its called asynchronus
+
+manage.py:
+use for running our server and creating migrations.
+
+running server command:
+python3 manage.py runserver
+
+django automatically create a sqlite3 db file when we run a server.
+
+http://127.0.0.1:8000/
+
+127.0.0.1 --> loacl host
+8000  --> port number
+default django runs in port no 8000
+
+HTTPRequest: url
+HTTPResponse: view
+
+web application creation:
+python3 manage.py startapp applicationname
+
+application specific files:
+
+__init__.py
+admin.py
+apps.py
+models.py
+tests.py
+views.py  -->function based views and class based views
+
+migration folder --> db specific information stored in migration folder
+
+we need to add our application name in settings.py.
+
+Adding httprequest and Http response in application.
+
+we need to add buisness logic in views.py by using HttpResponse class.
+
+import statement for HttpResponse:
+from django.http import HttpResponse
+
+example:
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def welcome(request):
+	message='<h2>hello sir welcome</h2>'
+	return HttpResponse(message)
+	
+Adding url for our HttpRequest in urls.py.
+
+from django.contrib import admin
+from django.urls import path
+from firstapplication import views #importing views.py file  
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('wish/',views.welcome)
+	
+]
+#wish is HttpRequest and welcome is function name
+
+when using more than one application in a project, developers create a urls.py file as application specific file.using this method we can manage imports easily.
+
+after creating urls.py file into application level file,developer set path in project urls.py as application name. 
+
+In project level urls file we must need import include function.
+import statement for include(): from django.urls import include,path
+in include function arguement must be string data type so we add application name.urls as string.
+---------------------------------------------------------------------------
+Django templates:
+
+separate html files called templates.
+code reusability perfectly followed in templates method.
+without templates,views file not have proper separation between html and python.
+using of templates, code readability is easier than without templates.
+
+templates creating:
+create a separate folder named by templates.within templates folder create application name template folders.in application folder we need to add our html files.
+
+templates connecting:
+in settings file we need to add location of template folder in DIR list.
+in views file using of render() we can render html files.render function must need template name arguement
+------------------------------------------------------------------------------
+some python path functions:
+
+print(__file__) --> gives file name
+
+import os
+print(os.path.abspath(__file__)) -->full path of file
+print(os.path.dirname(os.path.abspath(__file__)))  --->directory name
+
+Templates tags:
+using of template tags we can add dynamic contents in html files.template tags must be dictionary format.template tags content stored in context input value.
+
+example:
+import datetime
+def display(request):
+	date=datetime.datetime.now()
+	date_dict={'display_date':date}
+	return render(request,'templateApp/abc.html'.context=date_dict)
+
+In abc.html file we need to add {{display_date}}
+----------------------------------------------------------------------------
+static file:
+whenever we want to add images,css,js in our project,create a static file and add mention files in static folder.
+
+adding static file path in settings file using STATICFILES_DIRS=[STATIC_DIR,
+]
+
+in templates files need to connect static files using {% load static %} and add staticfiles storage.
+
+example:<img src="{% static 'my_app/example.jpg' %}" alt="my image">
+------------------------------------------------------------------------------
+Models in django:
+
+django defaultly support sqlite3 whenever we need to connect other rdbms in project, we add configuration in settings files.
+
+Each model is a python class which is a subcalss of django.db.models.model
+each attributes represents a database field
+
+models automatically create a table in db.
+
+example:
+
+from django.db import models
+
+class employee_details(models.Model):
+	first_name=models.charField(max_length=20)
+	last_name=models.charField(max_length=30)
+	
+this program is equal to below db query:
+
+CREATE TABLE myapp_employee_details("""
+	"id" serial NOT NULL PRIMARY KEY,
+	"first_name" varchar(20) NOT NULL,
+	"last_name" varchar(20) NOT NULL
+);
+
+after created dbms query you run a makemigrations command.
+example:
+python3 manage.py makemigrations
+
+we can run a application specific makemigrations command by adding application name after makemigrations.
+
+makemigrations create the table query. migrate execute the query.so after run a makemigrations command we run a migrate command.
+
+we can see a table query by running python3 manage.py sqlmigrate appname 0001
+
+register our models in admin file
+
+we can register out models by using:
+admin.site.register(model name)
+
+Creating superuser:
+
+python3 manage.py createsuperuser
+after run this command just add username and create password for that.
