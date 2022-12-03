@@ -174,3 +174,49 @@ Creating superuser:
 
 python3 manage.py createsuperuser
 after run this command just add username and create password for that.
+
+django forms:
+django forms provide very secured forms.
+using of django forms we can secure our application from cross site robbery.
+django provide Form class for create django forms.
+create a python file in application and import Form from django.
+as_p provides a output in line by line.
+by using csrf token in html file we can encrypt our data.{% csrf_token %}
+
+cookies:
+cookies are used for get a clients information in application.
+
+some drowbacks in cookies:
+cookies store very less information only.
+using of cookies application have a chance to affect by clients machine viruses
+some browsers define limits to application for storing cookies.
+only string values contain in cookies
+
+django use session id instead of cookies.
+in sessions data stored in server side.and abstract sending and receving cookies.
+in sessions cookies contain session id not the data.
+sessions automatically enabled when we create a django project.
+whenever we don't need sessions just remove django.contrib.sessions.middleware.SessionMiddleware and django.contrib.session in our middleware and installed apps.
+
+finding how many session id used in our application:
+
+from django.shortcuts import render
+
+def session_count(request):
+	count=request.session.get('count',0)
+	total_count=int(count)+1
+	request.session['count']=total_count
+	print(request.session.get_expiry_date()) # use for check expiry date
+	return render(request,'sessionApp/sessioncount.html',{'count':total_count})
+
+In session.html we can load a context value.
+sessions stored in data base so we must need migrate.
+
+CRUD:
+create
+retrieve
+update
+delete
+
+we can insert data in admin page after create a table.
+faker module create a random names for our input range.for using faker module:pip3 install faker
